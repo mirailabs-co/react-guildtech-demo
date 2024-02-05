@@ -1,8 +1,17 @@
 "use client";
 import { GuildTechCore } from "@mirailabs-co/guild-tech";
-import { Button, Descriptions, Input, Select, Space, Table, Tabs } from "antd";
+import {
+  Button,
+  Descriptions,
+  Input,
+  Select,
+  Space,
+  Table,
+  Tabs
+} from "antd";
 import { useEffect, useState } from "react";
 import HandleForm from "./_Form";
+import TabChat from "./_TabChat";
 
 const accessToken =
   "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJiYTk2ZmFjMC05ODk2LTRmZmUtYTg4MS00OWM1MTI1ODBiNWEiLCJqdGkiOiJiMTE2MTk2My1jMzJhLTQ5MDQtYTFjMi0zNGVkYjY2NjI3OTMiLCJleHAiOjE3MDcxMjk3NDIsInN1YiI6IjE3NTM1MTMzLThjODItNDJmMy1iYmQ1LTUyY2UxNDZiZGQwYiIsInNjb3BlcyI6WyJvcGVuaWQiLCJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIiwicHJvZmlsZSJdLCJlbWFpbCI6Im5ndXllbnR1dS5ia0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibmFtZSI6Ik5ndXllbiBUdXUiLCJnaXZlbl9uYW1lIjoiTmd1eWVuIiwiZmFtaWx5X25hbWUiOiJUdXUiLCJpc3MiOiJodHRwczovL2lkLWRldi12Mi5taXJhaWxhYnMuY28iLCJhenAiOiJiYTk2ZmFjMC05ODk2LTRmZmUtYTg4MS00OWM1MTI1ODBiNWEiLCJpYXQiOjE3MDcwNDMzNDJ9.SFkiCe1OM89HNRBGNXRecosGhgemcHL0t8Qye9qwRlv6SEYvI5A7qLUMxknd4rimjTDekHEKge58GbUFAa869lNK6URAEbVZTJSvPgxi1fWDPHTbVLPb0iLnKsPcwocuxyu8bMb5ron0npb3n0FNeNvYfv04nT1Yl7bzDsBG-KFTmG0sRY3aDLCH43dU2w7sbZKwryPtAuNl2-uqNuDxnAsSQYUfcDQh9fwNUHnuF-WpDnhizsQBDU85W1Y3dDUZ_9Y0Bv2y8OnAF5fz0GDuZr_41-WFL3rlfd3CKDofH1Ja0lLT_bVuwzmZsSF4ap57LpD1PclreyLYUK84oMqC2am0Tz7wcCayyahsduAwOvaIubH6nb6nEB3Sfy6B9an7fVypsmFp4Wm48vPMFz4m6nMmYpoNbqhg014y0EOUtCKbCtcMJ136E-to7zYqsPeeXrnT1tG06s2SaDw6QzcZhU1BdkrEatpybK9hoDUv1AbMFTpNufUYJ03x3dF4NghOZn1pExOzymNaogUJM9-ynvY_Tm_b4lubE17qojg5YdClUuNaZj_MW6vEiwA-aouJOP7zWSGp122TmgVPT4z7DfuqmBhW2BVhIFZsXqcPU4y6lw5OFjuXJ4OvB-MCp_0-vXq_DhBUrjkMJItFxt1EYDlkKOEmmnlOE1TJK48YCug";
@@ -14,6 +23,8 @@ export default function Home() {
   const [selectedLeaderBoard, setSelectedLeaderBoard] = useState<any>(null);
   const [listGuild, setListGuild] = useState<any>(null);
   const [myShares, setMyShares] = useState<any>(null);
+
+  const [userOnlines, setUserOnlines] = useState<any>(null);
 
   const [handleFormVisible, setHandleFormVisible] = useState(false);
 
@@ -170,6 +181,18 @@ export default function Home() {
         </div>
       ),
     },
+    {
+      key: "3",
+      label: "Chats",
+      children: (
+        <div>
+          {userOnlines?.length} user online
+          <TabChat
+            guildTechCore={guildTechCore}
+          />
+        </div>
+      ),
+    },
   ];
 
   const initGuildTechCore = async () => {
@@ -195,6 +218,9 @@ export default function Home() {
     const leaderBoards = await guildTechCore.getLeaderBoards();
     setGuildTechLeaderBoards(leaderBoards);
     setSelectedLeaderBoard(leaderBoards[0]._id);
+
+    const userOnlines = await guildTechCore.getUserOnlineInGuild();
+    setUserOnlines(userOnlines);
   };
 
   useEffect(() => {
