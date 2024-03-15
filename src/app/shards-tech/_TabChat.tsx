@@ -23,7 +23,7 @@ const Editor = ({ onChange, onSubmit, submitting, value }: any) => (
 );
 
 export default function TabChat(props: any) {
-  const { guildTechCore } = props;
+  const { shardsTechCore } = props;
   const [list, setList] = useState<any>([]);
 
   const [submitting, setSubmitting] = useState(false);
@@ -33,8 +33,8 @@ export default function TabChat(props: any) {
     if (!value) return;
 
     setSubmitting(true);
-    // call send message
-    // call update list
+    await shardsTechCore.sendMessage({ message: value });
+    await getGuildChatHistory();
 
     setSubmitting(false);
     setValue("");
@@ -45,8 +45,8 @@ export default function TabChat(props: any) {
   };
 
   const getGuildChatHistory = async () => {
-    if (guildTechCore) {
-      const res = await guildTechCore.getGuildChatHistory({
+    if (shardsTechCore) {
+      const res = await shardsTechCore.getGuildChatHistory({
         page: 1,
         limit: 100,
       });
@@ -55,10 +55,19 @@ export default function TabChat(props: any) {
   };
 
   useEffect(() => {
-    if (guildTechCore.userGuild?.address) {
+    if (shardsTechCore.userGuild?.address) {
       getGuildChatHistory();
     }
-  }, [guildTechCore]);
+  }, [shardsTechCore]);
+
+  useEffect(() => {
+    if (shardsTechCore) {
+      const miraiConnection = shardsTechCore.getConnection();
+      miraiConnection.on("newMessage", (message: any) => {
+        console.log("newMessage1", message);
+      });
+    }
+  }, [shardsTechCore]);
 
   return (
     <List
@@ -66,13 +75,9 @@ export default function TabChat(props: any) {
       itemLayout="horizontal"
       dataSource={list?.data
         ?.map((item: any) => {
-          let name = item.user?.username;
-          if (item.user?.firstName && item.user?.lastName) {
-            name = `${item.user?.firstName} ${item.user?.lastName}`;
-          }
           return {
-            author: <>{name}</>,
-            content: <p>{item.content}</p>,
+            author: <>{item?.user?.userId} - {item?.user?.address}</>,
+            content: <p>{item?.message}</p>,
             datetime: (
               <Tooltip
                 title={moment(item.createdAt).format("HH:mm DD/MM/YYYY")}
@@ -81,8 +86,8 @@ export default function TabChat(props: any) {
               </Tooltip>
             ),
           };
-        })
-        .reverse()}
+        }).reverse()
+      }
       renderItem={(item: any) => (
         <li>
           <Comment

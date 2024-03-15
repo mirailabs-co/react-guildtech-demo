@@ -365,6 +365,16 @@
   resolved "http://localhost:4873/@mirailabs-co/id-utils/-/3c6cbdfa56c84e1a3f2b92e0e6bfe3cfdc920475#3c6cbdfa56c84e1a3f2b92e0e6bfe3cfdc920475"
   integrity sha512-ZGLr4LRP5FTZyBXqYRrx4OjFGztrgcIWm3i7zTINgIFMLdLPI9EIpI3QTcOlecXqeq4lmXXieXEFPdgdV2hrfQ==
 
+"@mirailabs-co/shards-tech@0.0.86":
+  version "0.0.86"
+  resolved "http://localhost:4873/@mirailabs-co/shards-tech/-/shards-tech-0.0.86.tgz#b1191e2935bc95031895f5b4bd0748d9e037df77"
+  integrity sha512-YLireJ6Du8if/K5sm9fF9wltyUUn1pCXiFh5r3JmVkTdIpMHx6dcg6nYqSA1I+H2EwD10DR3fbVbUexAVKvfpQ==
+  dependencies:
+    eventemitter3 "^5.0.1"
+    jwt-decode "^3.1.2"
+    query-string "^8.1.0"
+    socket.io-client "^4.7.2"
+
 "@next/env@14.0.3":
   version "14.0.3"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-14.0.3.tgz#9a58b296e7ae04ffebce8a4e5bd0f87f71de86bd"
